@@ -1,0 +1,65 @@
+<div class="container">
+  <form [formGroup]="bettingSlipForm" (ngSubmit)="submitBettingSlip()">
+    <mat-form-field appearance="fill">
+      <mat-label>Bet Type</mat-label>
+      <mat-select formControlName="betType">
+        <mat-option value="Single">Single</mat-option>
+        <mat-option value="Multi">Multi</mat-option>
+        <mat-option [disabled]="events.length <= 2" value="Combination">Combination</mat-option>
+        <mat-option [disabled]="events.length <= 2" value="Special">Special</mat-option>
+      </mat-select>
+      @if (bettingSlipForm.invalid){
+        <mat-error>Kérlek válassz egy fogadási formát.</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Combination Bet Type</mat-label>
+      <mat-select formControlName="combinationBetType">
+        @for (i of arrayOfNumbers.slice(1, -1); track $index) {
+          <mat-option [value]="i"> {{i}}/{{arrayOfNumbers.length}} combination</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Special Bet Type</mat-label>
+      <mat-select formControlName="specialBetType">
+        <mat-optgroup [label]="'Excluding singles'">
+          <mat-option [disabled]="events.length !== 3" [value]="false">Trixie</mat-option>
+          <mat-option [disabled]="events.length !== 4" [value]="false">Yankee</mat-option>
+          <mat-option [disabled]="events.length !== 5" [value]="false">Canadian</mat-option>
+          <mat-option [disabled]="events.length !== 6" [value]="false">Heinz</mat-option>
+        </mat-optgroup>
+        <mat-optgroup [label]="'Including singles'">
+          <mat-option [disabled]="events.length !== 3" [value]="true">Patent</mat-option>
+          <mat-option [disabled]="events.length !== 4" [value]="true">Lucky 15</mat-option>
+          <mat-option [disabled]="events.length !== 5" [value]="true">Lucky 31</mat-option>
+          <mat-option [disabled]="events.length !== 6" [value]="true">Lucky 63</mat-option>
+          <mat-option [disabled]="events.length !== 7" [value]="true">Super Heinz</mat-option>
+          <mat-option [disabled]="events.length !== 8" [value]="true">Goliath</mat-option>
+        </mat-optgroup>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Stake Per Bet</mat-label>
+      <input matInput formControlName="stakePerBet" type="number">
+    </mat-form-field>
+
+    <div formArrayName="events">
+      <div *ngFor="let event of events.controls; let i=index" [formGroupName]="i">
+        {{i+1}}. fogadás:
+        <mat-form-field appearance="fill">
+          <mat-label>Odds</mat-label>
+          <input matInput formControlName="odds" type="number">
+          @if (event.invalid){
+
+          }
+        </mat-form-field>
+        <mat-checkbox formControlName="won">Won</mat-checkbox>
+      </div>
+    </div>
+    <button mat-button type="button" (click)="addEvent()">Add Event</button>
+    <p>Count of Events: {{ events.length }}</p>
+    <button mat-raised-button color="primary" type="submit">Calculate</button>
+  </form>
+</div>
