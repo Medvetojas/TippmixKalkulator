@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "serve": "ng serve",
-    "build": "ng build --base-href / --configuration production"
+    "build": "ng build --base-href / --configuration production",
+    "buildToGitHub": "ng build --output-path docs --base-href /TippmixKalkulator/"
   },
   "private": true,
   "dependencies": {
