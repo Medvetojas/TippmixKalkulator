@@ -7,32 +7,32 @@
             <mat-label>Fogadás típusa</mat-label>
             <mat-select formControlName="betType">
               <mat-option value="Single">Egyes kötés ({{this.events.length}}x)</mat-option>
-              <mat-option value="Multi">{{events.length}}{{getCorrectSuffix()}} kötés (1x)</mat-option>
-              <mat-option [disabled]="events.length <= 2" value="Combination">Combination</mat-option>
-              <mat-option [disabled]="events.length <= 2 || events.length >= 8" value="Special">Special</mat-option>
+              <mat-option [disabled]="events.length === 1" value="Multi">{{events.length}}{{getCorrectSuffix()}} kötés (1x)</mat-option>
+              <mat-option [disabled]="events.length <= 2" value="Combination">Kombinációs</mat-option>
+              <mat-option [disabled]="events.length <= 2 || events.length >= 8" value="Special">Speciális</mat-option>
             </mat-select>
             @if (bettingSlipForm.invalid){
               <mat-error>Kérlek válassz egy fogadási formát.</mat-error>
             }
           </mat-form-field>
           <mat-form-field>
-            <mat-label>Combination Bet Type</mat-label>
+            <mat-label>Kombinációs típus</mat-label>
             <mat-select formControlName="combinationBetType">
               @for (i of arrayOfNumbers.slice(1, -1); track $index) {
-                <mat-option [value]="i"> {{i}}/{{arrayOfNumbers.length}} kombináció ({{calculateCombinations(arrayOfNumbers.length, i)}}x)</mat-option>
+                <mat-option [value]="i"> {{i}}/{{arrayOfNumbers.length}} kombináció ({{calculateMaxCombinations(arrayOfNumbers.length, i)}}x)</mat-option>
               }
             </mat-select>
           </mat-form-field>
           <mat-form-field>
-            <mat-label>Special Bet Type</mat-label>
+            <mat-label>Speciális típus</mat-label>
             <mat-select formControlName="specialBetType">
-              <mat-optgroup [label]="'Excluding singles'">
+              <mat-optgroup [label]="'Egyes kötések nélkül'">
                 <mat-option [disabled]="events.length !== 3" [value]="false">Trixie</mat-option>
                 <mat-option [disabled]="events.length !== 4" [value]="false">Yankee</mat-option>
                 <mat-option [disabled]="events.length !== 5" [value]="false">Canadian</mat-option>
                 <mat-option [disabled]="events.length !== 6" [value]="false">Heinz</mat-option>
               </mat-optgroup>
-              <mat-optgroup [label]="'Including singles'">
+              <mat-optgroup [label]="'Egyes kötésekkel'">
                 <mat-option [disabled]="events.length !== 3" [value]="true">Patent</mat-option>
                 <mat-option [disabled]="events.length !== 4" [value]="true">Lucky 15</mat-option>
                 <mat-option [disabled]="events.length !== 5" [value]="true">Lucky 31</mat-option>
@@ -43,7 +43,7 @@
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="fill">
-            <mat-label>Stake Per Bet</mat-label>
+            <mat-label>Alaptét</mat-label>
             <input matInput formControlName="stakePerBet" type="number">
           </mat-form-field>
         </div>
@@ -67,28 +67,24 @@
               <td>
                 {{i+1}}. fogadás:
               </td>
-              
-                <td>
-                  <mat-form-field appearance="fill">
-                    <mat-label>Odds</mat-label>
-                    <input matInput formControlName="odds" type="number">
-                    @if (event.invalid){
-      
-                    }
-                  </mat-form-field>
-                </td>
-                <td>
-                    <mat-checkbox formControlName="won">Nyertes</mat-checkbox>
-                </td>
-              
+              <td>
+                <mat-form-field appearance="fill">
+                  <mat-label>Odds</mat-label>
+                  <input matInput formControlName="odds" type="number">
+                  @if (event.invalid){
+    
+                  }
+                </mat-form-field>
+              </td>
+              <td>
+                  <mat-checkbox formControlName="won">Nyertes</mat-checkbox>
+              </td>
             </tr>
           </ng-container>
         </tbody>
       </table>
-        
-        <button mat-button type="button" (click)="addEvent()">Add Event</button>
-        <p>Események száma: {{ events.length }}</p>
-        <button mat-raised-button color="primary" type="submit">Calculate</button>
+        <button mat-button type="button" (click)="addEvent()">Esemény hozzáadása</button>
+        <button mat-button type="button" [disabled]="events.length === 1" (click)="removeEvent()">Esemény törlése</button>
       </form>
     </div>
     <div class="col-sm-3">
@@ -101,10 +97,18 @@
         <tbody>
           <tr>
             <td>
+              A szelvény ára:
+            </td>
+            <td>
+              {{totalValueOfBetSlip | number: '1.0-0'}} Ft
+            </td>
+          </tr>
+          <tr>
+            <td>
               Teljes nyereség:
             </td>
             <td>
-              {{totalWinnings}} Ft
+              {{totalWinnings | number: '1.0-0'}} Ft
             </td>
           </tr>
           <tr>
@@ -112,15 +116,7 @@
               Teljes profit/veszteség:
             </td>
             <td>
-              {{totalProfit}} Ft
-            </td>
-          </tr>
-          <tr>
-            <td>
-              A szelvény ára:
-            </td>
-            <td>
-              {{totalValueOfBetSlip}} Ft
+              {{totalProfit | number: '1.0-0'}} Ft
             </td>
           </tr>
         </tbody>

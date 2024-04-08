@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import {FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
@@ -37,7 +37,7 @@ export class BettingSlipCalculatorComponent implements OnInit {
     this.bettingSlipForm = new FormGroup({
       betType: new FormControl('', Validators.required),
       specialBetType: new FormControl(''),
-      combinationBetType:  new FormControl(''),
+      combinationBetType: new FormControl(''),
       stakePerBet: new FormControl(300, Validators.required),
       events: this.fb.array([])
     });
@@ -69,19 +69,32 @@ export class BettingSlipCalculatorComponent implements OnInit {
         this.bettingSlipForm.get('combinationBetType')!.disable();
       }
     });
+
+    this.bettingSlipForm.valueChanges.subscribe(() => {
+      if(this.bettingSlipForm.valid){
+        this.submitBettingSlip();
+      }
+    })
   }
 
   get events() {
     return this.bettingSlipForm.get('events') as FormArray;
   }
 
-  addEvent(): void {
+  get betType() {
+    return this.bettingSlipForm.get('betType')!.value;
+  }
+
+  addEvent() {
     const newEvent = this.fb.group({
-      id: [this.events.length + 1, Validators.required],
       odds: ['', [Validators.required, Validators.min(1.00)]],
       won: [false]
     });
     this.events.push(newEvent);
+  }
+
+  removeEvent() {
+    this.events.removeAt(this.events.length - 1);
   }
 
   getCorrectSuffix(): string {
@@ -119,24 +132,157 @@ export class BettingSlipCalculatorComponent implements OnInit {
     }
     return result;
   }
-  
-  calculateCombinations(n: number, r: number): number {
+
+  calculateMaxCombinations(n: number, r: number): number {
     return this.factorial(n) / (this.factorial(r) * this.factorial(n - r));
   }
 
   submitBettingSlip(): void {
-    if (this.bettingSlipForm.valid) {
-      console.log(this.bettingSlipForm.value);
-    }
+      this.totalWinnings = 0;
+      this.totalProfit = 0;
+      this.totalValueOfBetSlip = 0;
+
+      if(this.betType == "Single"){
+        this.calculateSingle();
+      } else if(this.betType == "Multi"){
+        this.calculateMulti();
+      } else if(this.betType == "Combination"){
+        this.calculateCombination();
+      } else {
+        this.calculateSpecial();
+      }
+
+      this.totalProfit = this.totalWinnings - this.totalValueOfBetSlip;
   }
 
-  calculateSingles(){
+  calculateSingle(){
+    const stakePerBet: number = this.bettingSlipForm.get('stakePerBet')?.value || 0;
 
+    this.totalValueOfBetSlip = this.events.length * stakePerBet;
+    this.totalWinnings = 0;
+
+    this.events.controls.forEach(event => {
+      const odds = event.get('odds')?.value || 0;
+      const won = event.get('won')?.value || false;
+
+      if (won) {
+        this.totalWinnings += stakePerBet * odds;
+      }
+    });
+
+    this.totalProfit = this.totalWinnings - this.totalValueOfBetSlip;
   }
 
   calculateMulti(){
+    const stakePerBet: number = this.bettingSlipForm.get('stakePerBet')?.value || 0;
+    let isBetWon = true;
+    let oddsMultiplier = 1;
 
+    this.events.controls.forEach(event => {
+      const odds = event.get('odds')?.value || 0;
+      const won = event.get('won')?.value || false;
+
+      if (!won) {
+        isBetWon = false;
+        return;
+      }
+
+      oddsMultiplier *= odds;
+    });
+
+    if (isBetWon && oddsMultiplier > 1) {
+        this.totalWinnings = stakePerBet * oddsMultiplier;
+        this.totalValueOfBetSlip = stakePerBet;
+    } else {
+        this.totalWinnings = 0;
+        this.totalValueOfBetSlip = stakePerBet;
+    }
   }
 
-  calculateSpecial(){}
+  calculateCombination(): void {
+    const events = this.bettingSlipForm.get('events') as FormArray;
+    const stakePerBet: number = this.bettingSlipForm.get('stakePerBet')?.value || 0;
+    const combinationBetType: number = this.bettingSlipForm.get('combinationBetType')?.value || 0;
+  
+    const generateCombinations = (sourceArray: AbstractControl[], combinationLength: number) => {
+      const sourceLength = sourceArray.length;
+      if (combinationLength > sourceLength) return [];
+  
+      const combinations: AbstractControl[][] = [];
+      const combination: AbstractControl[] = [];
+  
+      const innerFunc = (start: number, depth: number) => {
+        for (let i = start; i < sourceLength - combinationLength + depth + 1; i++) {
+          combination[depth] = sourceArray[i];
+  
+          if (depth < combinationLength - 1) {
+            innerFunc(i + 1, depth + 1);
+          } else {
+            combinations.push([...combination]);
+          }
+        }
+      };
+  
+      innerFunc(0, 0);
+      return combinations;
+    };
+  
+    const combinations = generateCombinations(events.controls, combinationBetType);
+  
+    combinations.forEach(combination => {
+      const combinedOdds = combination.reduce((odds, event) => odds * event.get('odds')!.value, 1);
+      const isWon = combination.every(event => event.get('won')!.value);
+  
+      this.totalValueOfBetSlip += stakePerBet;
+  
+      if (isWon) {
+        const winnings = stakePerBet * combinedOdds;
+        this.totalWinnings += winnings;
+      }
+    });
+  }
+  
+
+  calculateSpecial(): void {
+  const events = this.bettingSlipForm.get('events') as FormArray;
+  const specialBetType: boolean = this.bettingSlipForm.get('specialBetType')?.value || false;
+  const stakePerBet: number = this.bettingSlipForm.get('stakePerBet')?.value || 0;
+  const totalEvents = events.length;
+
+  const generateCombinations = (sourceArray: AbstractControl[], combinationLength: number): AbstractControl[][] => {
+    const combinations: AbstractControl[][] = [];
+    const combination: AbstractControl[] = new Array(combinationLength);
+
+    const innerFunc = (start: number, depth: number) => {
+      for (let i = start; i < sourceArray.length - combinationLength + depth + 1; i++) {
+        combination[depth] = sourceArray[i];
+
+        if (depth === combinationLength - 1) {
+          combinations.push([...combination]);
+        } else {
+          innerFunc(i + 1, depth + 1);
+        }
+      }
+    };
+
+    innerFunc(0, 0);
+    return combinations;
+  };
+
+  const startCombinationSize = specialBetType ? 1 : 2;
+
+  for (let combinationSize = startCombinationSize; combinationSize <= totalEvents; combinationSize++) {
+    generateCombinations(events.controls, combinationSize).forEach(combination => {
+      const combinedOdds = combination.reduce((odds, event) => odds * event.get('odds')!.value, 1);
+      const isWon = combination.every(event => event.get('won')!.value);
+
+      this.totalValueOfBetSlip += stakePerBet;
+
+      if (isWon) {
+        const winnings = stakePerBet * combinedOdds;
+        this.totalWinnings += winnings;
+      }
+    });
+  }
+}
 }
