@@ -48,6 +48,10 @@ export class BettingSlipCalculatorComponent implements OnInit {
       if(this.events.length >= 3){
         this.arrayOfNumbers = Array.from({length: this.events.length}, (_, i) => i + 1);
       }
+
+      if(this.events.length > 8 && this.bettingSlipForm.get('betType')!.value == "Special" ){
+        this.bettingSlipForm.get('betType')!.setValue("Single");
+      }
     });
 
     this.bettingSlipForm.get('specialBetType')!.disable();
@@ -80,9 +84,59 @@ export class BettingSlipCalculatorComponent implements OnInit {
     this.events.push(newEvent);
   }
 
+  getCorrectSuffix(): string {
+    const lastDigit = this.events.length % 10;
+  
+    if(this.events.length == 10){
+      return '-es'
+    } else if(this.events.length == 20){
+      return '-as'
+    }
+
+    switch (lastDigit) {
+      case 1:
+      case 2:
+      case 4:
+      case 7:
+      case 9:
+        return '-es';
+      case 3:
+      case 8:
+        return '-as';
+      case 5:
+        return '-ös';
+      case 6:
+        return '-os';
+      default:
+        return '-es';
+    }
+  }
+
+  factorial(n: number): number {
+    let result: number = 1;
+    for (let i: number = 2; i <= n; i++) {
+      result *= i;
+    }
+    return result;
+  }
+  
+  calculateCombinations(n: number, r: number): number {
+    return this.factorial(n) / (this.factorial(r) * this.factorial(n - r));
+  }
+
   submitBettingSlip(): void {
     if (this.bettingSlipForm.valid) {
       console.log(this.bettingSlipForm.value);
     }
   }
+
+  calculateSingles(){
+
+  }
+
+  calculateMulti(){
+
+  }
+
+  calculateSpecial(){}
 }
