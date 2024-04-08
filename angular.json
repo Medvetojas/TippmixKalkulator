@@ -87,6 +87,9 @@
           "options": {
             "buildTarget": "TippmixKalkulator:build"
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }
