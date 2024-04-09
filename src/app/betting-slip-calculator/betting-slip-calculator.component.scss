@@ -1,6 +1,4 @@
-.mat-form-field-infix {
-    top: 0em !important;
- }      
- .mat-form-field-suffix {
-    top: 0em !important;
- }  
+.mat-mdc-form-field-infix {
+    min-width: 100px !important;
+    width: auto !important;
+}
