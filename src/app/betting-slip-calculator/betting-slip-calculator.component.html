@@ -1,9 +1,9 @@
-<div class="container">
+<div class="container mt-5 shadow p-3 mb-5 bg-body-tertiary rounded">
   <div class="row">
-    <div class="col-sm-9">
+    <div class="col-lg-9">
       <form [formGroup]="bettingSlipForm" (ngSubmit)="submitBettingSlip()">
-        <div>
-          <mat-form-field appearance="fill">
+        <div class="row">
+          <mat-form-field class="col-lg">
             <mat-label>Fogadás típusa</mat-label>
             <mat-select formControlName="betType">
               <mat-option value="Single">Egyes kötés ({{this.events.length}}x)</mat-option>
@@ -15,7 +15,7 @@
               <mat-error>Kérlek válassz egy fogadási formát.</mat-error>
             }
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field class="col-lg">
             <mat-label>Kombinációs típus</mat-label>
             <mat-select formControlName="combinationBetType">
               @for (i of arrayOfNumbers.slice(1, -1); track $index) {
@@ -23,7 +23,7 @@
               }
             </mat-select>
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field class="col-lg">
             <mat-label>Speciális típus</mat-label>
             <mat-select formControlName="specialBetType">
               <mat-optgroup [label]="'Egyes kötések nélkül'">
@@ -42,12 +42,24 @@
               </mat-optgroup>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>Alaptét</mat-label>
+          <mat-form-field class="col-lg-2">
+            <mat-label>Alaptét (Ft)</mat-label>
             <input matInput formControlName="stakePerBet" type="number">
           </mat-form-field>
         </div>
-      <table class="table table-striped">
+        <div class="row mt-2 text-center">
+          <div class="col-sm-4">
+            <button mat-button type="button" (click)="addEvent()">Esemény hozzáadása</button>
+            
+          </div>
+          <div class="col-sm-4">
+            <button mat-button type="button" [disabled]="events.length === 1" (click)="removeEvent()">Esemény törlése</button>
+          </div>
+          <div class="col-sm-4">
+            <button mat-button type="button">Események száma: {{events.length}}</button>
+          </div>
+        </div>
+      <table class="table table-striped mt-3">
         <thead>
           <tr>
             <th>
@@ -64,10 +76,10 @@
         <tbody>
           <ng-container formArrayName="events">
             <tr *ngFor="let event of events.controls; let i=index" [formGroupName]="i">
-              <td>
+              <td class="align-middle">
                 {{i+1}}. fogadás:
               </td>
-              <td>
+              <td class="align-middle">
                 <mat-form-field appearance="fill">
                   <mat-label>Odds</mat-label>
                   <input matInput formControlName="odds" type="number">
@@ -76,18 +88,16 @@
                   }
                 </mat-form-field>
               </td>
-              <td>
+              <td class="align-middle">
                   <mat-checkbox formControlName="won">Nyertes</mat-checkbox>
               </td>
             </tr>
           </ng-container>
         </tbody>
       </table>
-        <button mat-button type="button" (click)="addEvent()">Esemény hozzáadása</button>
-        <button mat-button type="button" [disabled]="events.length === 1" (click)="removeEvent()">Esemény törlése</button>
       </form>
     </div>
-    <div class="col-sm-3">
+    <div class="col-lg-3">
       <table class="table table-striped">
         <thead>
           <tr>
@@ -97,7 +107,7 @@
         <tbody>
           <tr>
             <td>
-              A szelvény ára:
+              A játék ára:
             </td>
             <td>
               {{totalValueOfBetSlip | number: '1.0-0'}} Ft
@@ -105,7 +115,7 @@
           </tr>
           <tr>
             <td>
-              Teljes nyereség:
+              Nyeremény:
             </td>
             <td>
               {{totalWinnings | number: '1.0-0'}} Ft
@@ -113,7 +123,7 @@
           </tr>
           <tr>
             <td>
-              Teljes profit/veszteség:
+              Profit/veszteség:
             </td>
             <td>
               {{totalProfit | number: '1.0-0'}} Ft
