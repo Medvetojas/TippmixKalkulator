@@ -6,6 +6,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { BettingSlipCalculatorComponent } from './betting-slip-calculator/betting-slip-calculator.component';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { FooterComponent } from './footer/footer.component';
+import { InstructionsModalComponent } from './instructions-modal/instructions-modal.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { FooterComponent } from './footer/footer.component';
     BrowserModule,
     AppRoutingModule,
     BettingSlipCalculatorComponent,
+    InstructionsModalComponent,
     FooterComponent
   ],
   providers: [

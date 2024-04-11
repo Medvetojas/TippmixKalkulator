@@ -6,6 +6,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { InstructionsModalComponent } from '../instructions-modal/instructions-modal.component';
 
 @Component({
   selector: 'betting-slip-calculator',
@@ -18,7 +20,8 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     MatButtonModule,
     MatSelectModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatDialogModule
   ],
   templateUrl: './betting-slip-calculator.component.html',
   styleUrl: './betting-slip-calculator.component.scss',
@@ -32,7 +35,7 @@ export class BettingSlipCalculatorComponent implements OnInit {
   totalProfit: number = 0;
   totalValueOfBetSlip: number = 0;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.bettingSlipForm = new FormGroup({
@@ -84,6 +87,10 @@ export class BettingSlipCalculatorComponent implements OnInit {
 
   get betType() {
     return this.bettingSlipForm.get('betType')!.value;
+  }
+
+  triggerTutorialDialog() {
+    this.dialog.open(InstructionsModalComponent);
   }
 
   addEvent() {
