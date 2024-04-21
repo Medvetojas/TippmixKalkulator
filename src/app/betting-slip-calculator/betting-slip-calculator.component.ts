@@ -90,7 +90,9 @@ export class BettingSlipCalculatorComponent implements OnInit {
   }
 
   triggerTutorialDialog() {
-    this.dialog.open(InstructionsModalComponent);
+    this.dialog.open(InstructionsModalComponent, {
+      maxWidth: "40vw"
+    });
   }
 
   addEvent() {

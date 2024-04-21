@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import {
   MatDialogRef,
   MatDialogTitle,
@@ -19,7 +19,8 @@ import {MatButtonModule} from '@angular/material/button';
     MatDialogContent,
     MatDialogActions,
     MatDialogClose,
-  ]
+  ],
+  encapsulation: ViewEncapsulation.None
 })
 export class InstructionsModalComponent {
 
