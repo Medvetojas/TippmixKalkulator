@@ -3,7 +3,7 @@
     <div class="col-lg-9">
       <form [formGroup]="bettingSlipForm" (ngSubmit)="submitBettingSlip()">
         <div class="row">
-          <mat-form-field class="col-lg">
+          <mat-form-field class="col-lg" appearance="outline">
             <mat-label>Fogadás típusa</mat-label>
             <mat-select formControlName="betType">
               <mat-option value="Single">Egyes kötés ({{this.events.length}}x)</mat-option>
@@ -15,7 +15,7 @@
               <mat-error>Kérlek válassz egy fogadási formát.</mat-error>
             }
           </mat-form-field>
-          <mat-form-field class="col-lg">
+          <mat-form-field class="col-lg" appearance="outline">
             <mat-label>Kombinációs típus</mat-label>
             <mat-select formControlName="combinationBetType">
               @for (i of arrayOfNumbers.slice(1, -1); track $index) {
@@ -23,7 +23,7 @@
               }
             </mat-select>
           </mat-form-field>
-          <mat-form-field class="col-lg">
+          <mat-form-field class="col-lg" appearance="outline">
             <mat-label>Speciális típus</mat-label>
             <mat-select formControlName="specialBetType">
               <mat-optgroup [label]="'Egyes kötések nélkül'">
@@ -42,7 +42,7 @@
               </mat-optgroup>
             </mat-select>
           </mat-form-field>
-          <mat-form-field class="col-lg-2">
+          <mat-form-field class="col-lg-2" appearance="outline">
             <mat-label>Alaptét (Ft)</mat-label>
             <input matInput formControlName="stakePerBet" type="number">
           </mat-form-field>
@@ -80,7 +80,7 @@
                 {{i+1}}.
               </td>
               <td class="align-middle">
-                <mat-form-field class="w-100">
+                <mat-form-field class="w-100" appearance="outline">
                   <mat-label>Odds</mat-label>
                   <input matInput formControlName="odds" type="number">
                   @if (event.invalid){
