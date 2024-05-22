@@ -110,7 +110,7 @@
               A játék ára:
             </td>
             <td>
-              {{totalValueOfBetSlip | number: '1.0-0'}} Ft
+              {{totalValueOfBetSlip | hufCurrencyPipe}}
             </td>
           </tr>
           <tr>
@@ -118,7 +118,7 @@
               Nyeremény:
             </td>
             <td>
-              {{totalWinnings | number: '1.0-0'}} Ft
+              {{totalWinnings | hufCurrencyPipe}}
             </td>
           </tr>
           <tr>
@@ -126,7 +126,7 @@
               Profit/veszteség:
             </td>
             <td>
-              {{totalProfit | number: '1.0-0'}} Ft
+              {{totalProfit | hufCurrencyPipe}}
             </td>
           </tr>
         </tbody>

@@ -8,24 +8,26 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { InstructionsModalComponent } from '../instructions-modal/instructions-modal.component';
+import { HufCurrencyPipe } from "../pipes/huf-currency.pipe";
 
 @Component({
-  selector: 'betting-slip-calculator',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    FormsModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatCheckboxModule,
-    MatDialogModule
-  ],
-  templateUrl: './betting-slip-calculator.component.html',
-  styleUrl: './betting-slip-calculator.component.scss',
-  encapsulation: ViewEncapsulation.None
+    selector: 'betting-slip-calculator',
+    standalone: true,
+    templateUrl: './betting-slip-calculator.component.html',
+    styleUrl: './betting-slip-calculator.component.scss',
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        CommonModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        FormsModule,
+        MatButtonModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        MatDialogModule,
+        HufCurrencyPipe
+    ]
 })
 export class BettingSlipCalculatorComponent implements OnInit {
   bettingSlipForm!: FormGroup;
@@ -163,6 +165,8 @@ export class BettingSlipCalculatorComponent implements OnInit {
       }
 
       this.totalProfit = this.totalWinnings - this.totalValueOfBetSlip;
+      console.log(this.totalProfit)
+      console.log(this.totalWinnings)
   }
 
   calculateSingle(){
