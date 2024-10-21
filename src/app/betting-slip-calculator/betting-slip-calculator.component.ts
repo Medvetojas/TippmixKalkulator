@@ -32,6 +32,7 @@ import { HufCurrencyPipe } from "../pipes/huf-currency.pipe";
 export class BettingSlipCalculatorComponent implements OnInit {
   bettingSlipForm!: FormGroup;
   arrayOfNumbers: number[] = [];
+
   totalWinnings: number = 0;
   totalProfit: number = 0;
   totalValueOfBetSlip: number = 0;
@@ -63,6 +64,9 @@ export class BettingSlipCalculatorComponent implements OnInit {
       events: this.fb.array([this.createEvent()])
     });
 
+    this.bettingSlipForm.get('specialBetType')!.disable();
+    this.bettingSlipForm.get('combinationBetType')!.disable();
+
     this.events.valueChanges.subscribe(() => this.updateArrayOfNumbers());
     this.bettingSlipForm.valueChanges.subscribe(() => this.submitBettingSlip());
   }
@@ -92,6 +96,23 @@ export class BettingSlipCalculatorComponent implements OnInit {
 
   updateArrayOfNumbers() {
     this.arrayOfNumbers = Array.from({ length: this.events.length }, (_, i) => i + 1);
+
+    this.bettingSlipForm.get('betType')!.valueChanges.subscribe(value => {
+      if (value === 'Combination') {
+        this.bettingSlipForm.get('specialBetType')!.setValue(null);
+        this.bettingSlipForm.get('specialBetType')!.disable();
+        this.bettingSlipForm.get('combinationBetType')!.enable();
+      } else if (value === 'Special') {
+        this.bettingSlipForm.get('combinationBetType')!.setValue(null);
+        this.bettingSlipForm.get('combinationBetType')!.disable();
+        this.bettingSlipForm.get('specialBetType')!.enable();
+      } else {
+        this.bettingSlipForm.get('specialBetType')!.setValue(null);
+        this.bettingSlipForm.get('specialBetType')!.disable();
+        this.bettingSlipForm.get('combinationBetType')!.setValue(null);
+        this.bettingSlipForm.get('combinationBetType')!.disable();
+      }
+    });
   }
 
   calculateMaxCombinations(n: number, r: number): number {
