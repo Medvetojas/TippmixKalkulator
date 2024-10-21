@@ -48,14 +48,16 @@
           </mat-form-field>
         </div>
         <div class="row mt-2 text-center">
-          <div class="col-sm-4">
+          <div class="col-sm-3">
             <button mat-button type="button" (click)="addEvent()">Esemény hozzáadása</button>
-            
           </div>
-          <div class="col-sm-4">
+          <div class="col-sm-3">
+            <button mat-button type="button" (click)="addException()">Kizárás hozzáadása</button>
+          </div>
+          <div class="col-sm-3">
             <button mat-button type="button" [disabled]="events.length === 1" (click)="removeEvent()">Esemény törlése</button>
           </div>
-          <div class="col-sm-4">
+          <div class="col-sm-3">
             <button mat-button type="button">Események száma: {{events.length}}</button>
           </div>
         </div>
@@ -83,13 +85,10 @@
                 <mat-form-field class="w-100" appearance="outline">
                   <mat-label>Odds</mat-label>
                   <input matInput formControlName="odds" type="number">
-                  @if (event.invalid){
-    
-                  }
                 </mat-form-field>
               </td>
               <td class="align-middle">
-                  <mat-checkbox formControlName="won">Nyertes</mat-checkbox>
+                <mat-checkbox formControlName="won">Nyertes</mat-checkbox>
               </td>
             </tr>
           </ng-container>

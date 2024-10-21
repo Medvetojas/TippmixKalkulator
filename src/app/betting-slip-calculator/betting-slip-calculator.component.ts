@@ -83,6 +83,10 @@ export class BettingSlipCalculatorComponent implements OnInit {
     this.events.push(this.createEvent());
   }
 
+  addException() {
+    throw new Error('Method not implemented.');
+  }
+
   removeEvent() {
     this.events.removeAt(this.events.length - 1);
   }
