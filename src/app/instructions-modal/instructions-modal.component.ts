@@ -9,18 +9,17 @@ import {
 import {MatButtonModule} from '@angular/material/button';
 
 @Component({
-  selector: 'app-instructions-modal',
-  templateUrl: './instructions-modal.component.html',
-  styleUrl: './instructions-modal.component.scss',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,
-  ],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-instructions-modal',
+    templateUrl: './instructions-modal.component.html',
+    styleUrl: './instructions-modal.component.scss',
+    imports: [
+        MatButtonModule,
+        MatDialogTitle,
+        MatDialogContent,
+        MatDialogActions,
+        MatDialogClose,
+    ],
+    encapsulation: ViewEncapsulation.None
 })
 export class InstructionsModalComponent {
 

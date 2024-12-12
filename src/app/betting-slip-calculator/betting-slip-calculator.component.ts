@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
@@ -12,7 +12,6 @@ import { HufCurrencyPipe } from "../pipes/huf-currency.pipe";
 
 @Component({
     selector: 'betting-slip-calculator',
-    standalone: true,
     templateUrl: './betting-slip-calculator.component.html',
     styleUrl: './betting-slip-calculator.component.scss',
     encapsulation: ViewEncapsulation.None,
