@@ -139,7 +139,19 @@ export class BettingSlipCalculatorComponent implements OnInit {
   }
 
   calculateMaxCombinations(n: number, r: number): number {
-    return this.factorial(n) / (this.factorial(r) * this.factorial(n - r));
+    const totalCombinations = this.factorial(n) / (this.factorial(r) * this.factorial(n - r));
+    let invalidCombinations = 0;
+  
+    this.exceptions.forEach((_, exceptionIndex) => {
+      const eventsWithException = this.events.controls.filter(event => event.get('exception' + exceptionIndex)?.value);
+  
+      if (eventsWithException.length >= r) {
+        invalidCombinations += this.factorial(eventsWithException.length) /
+                               (this.factorial(r) * this.factorial(eventsWithException.length - r));
+      }
+    });
+  
+    return totalCombinations - invalidCombinations;
   }
 
   factorial(n: number): number {

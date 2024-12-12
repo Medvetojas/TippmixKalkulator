@@ -48,19 +48,19 @@
           </mat-form-field>
         </div>
         <div class="row mt-2 text-center">
-          <div class="col-sm-3">
+          <div class="col-sm-2">
             <button mat-button type="button" (click)="addEvent()">Esemény hozzáadása</button>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-2">
             <button mat-button type="button" [disabled]="events.length === 1" (click)="removeEvent()">Esemény törlése</button>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-2">
             <button mat-button type="button" (click)="addException()">Kizárás hozzáadása</button>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-2">
             <button mat-button type="button" [disabled]="exceptions.length === 0" (click)="removeException()">Kizárás törlése</button>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-4">
             <button mat-button type="button">Események száma: {{events.length}}</button>
           </div>
         </div>
