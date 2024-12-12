@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import  {MatButtonModule } from '@angular/material/button';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatInputModule } from '@angular/material/input';
 import {  MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -30,6 +30,7 @@ import { HufCurrencyPipe } from "../pipes/huf-currency.pipe";
 export class BettingSlipCalculatorComponent implements OnInit {
   bettingSlipForm!: FormGroup;
   arrayOfNumbers: number[] = [];
+  exceptions: any[] = [];
 
   totalWinnings: number = 0;
   totalProfit: number = 0;
@@ -81,19 +82,39 @@ export class BettingSlipCalculatorComponent implements OnInit {
     this.events.push(this.createEvent());
   }
 
-  addException() {
-    throw new Error('Method not implemented.');
-  }
-
   removeEvent() {
     this.events.removeAt(this.events.length - 1);
   }
 
+  addException() {
+    this.exceptions.push({});
+    this.events.controls.forEach(event => {
+      (event as FormGroup).addControl('exception' + (this.exceptions.length - 1), new FormControl(false));
+    });
+  }
+
+  removeException() {
+    if (this.exceptions.length > 0) {
+      const lastExceptionIndex = this.exceptions.length - 1;
+      this.exceptions.pop();
+  
+      this.events.controls.forEach(event => {
+        (event as FormGroup).removeControl('exception' + lastExceptionIndex);
+      });
+    }
+  }
+
   createEvent() {
-    return this.fb.group({
+    const eventGroup = this.fb.group({
       odds: ['', [Validators.required, Validators.min(1.00)]],
       won: [false]
     });
+  
+    this.exceptions.forEach((_, index) => {
+      (eventGroup as FormGroup).addControl('exception' + index, new FormControl(false));
+    });
+  
+    return eventGroup;
   }
 
   updateArrayOfNumbers() {
@@ -203,18 +224,25 @@ export class BettingSlipCalculatorComponent implements OnInit {
     if (combinationLength > sourceArray.length) return [];
     const combinations: any[][] = [];
     const combination: any[] = new Array(combinationLength);
-
+  
     const innerFunc = (start: number, depth: number) => {
       for (let i = start; i < sourceArray.length - combinationLength + depth + 1; i++) {
         combination[depth] = sourceArray[i];
-        if (depth === combinationLength - 1) {
-          combinations.push([...combination]);
-        } else {
-          innerFunc(i + 1, depth + 1);
+  
+        const hasException = this.exceptions.some((_, j) => {
+          return combination.filter(event => event.get('exception' + j)?.value).length > 1;
+        });
+  
+        if (!hasException) {
+          if (depth === combinationLength - 1) {
+            combinations.push([...combination]);
+          } else {
+            innerFunc(i + 1, depth + 1);
+          }
         }
       }
     };
-
+  
     innerFunc(0, 0);
     return combinations;
   }

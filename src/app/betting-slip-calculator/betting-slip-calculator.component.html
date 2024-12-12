@@ -52,10 +52,13 @@
             <button mat-button type="button" (click)="addEvent()">Esemény hozzáadása</button>
           </div>
           <div class="col-sm-3">
+            <button mat-button type="button" [disabled]="events.length === 1" (click)="removeEvent()">Esemény törlése</button>
+          </div>
+          <div class="col-sm-3">
             <button mat-button type="button" (click)="addException()">Kizárás hozzáadása</button>
           </div>
           <div class="col-sm-3">
-            <button mat-button type="button" [disabled]="events.length === 1" (click)="removeEvent()">Esemény törlése</button>
+            <button mat-button type="button" [disabled]="exceptions.length === 0" (click)="removeException()">Kizárás törlése</button>
           </div>
           <div class="col-sm-3">
             <button mat-button type="button">Események száma: {{events.length}}</button>
@@ -64,23 +67,18 @@
         <table class="table table-striped table-bordered mt-3 table-responsive">
           <thead>
             <tr>
-              <th>
-                Esemény száma
-              </th>
-              <th>
-                Odds
-              </th>
-              <th>
-                Esemény nyertesség 
-              </th>
+              <th>Esemény száma</th>
+              <th>Odds</th>
+              <th>Esemény nyertesség</th>
+              <ng-container *ngFor="let exception of exceptions; let j = index">
+                <th>Kizárás {{j + 1}}</th>
+              </ng-container>
             </tr>
           </thead>
           <tbody class="table-group-divider">
             <ng-container formArrayName="events">
-              <tr *ngFor="let event of events.controls; let i=index" [formGroupName]="i">
-                <td class="align-middle">
-                  {{i+1}}.
-                </td>
+              <tr *ngFor="let event of events.controls; let i = index" [formGroupName]="i">
+                <td class="align-middle">{{i + 1}}.</td>
                 <td class="align-middle">
                   <mat-form-field class="w-100" appearance="outline">
                     <mat-label>Odds</mat-label>
@@ -90,6 +88,11 @@
                 <td class="align-middle">
                   <mat-checkbox formControlName="won">Nyertes</mat-checkbox>
                 </td>
+                <ng-container *ngFor="let exception of exceptions; let j = index">
+                  <td class="align-middle">
+                    <mat-checkbox [formControlName]="'exception' + j">Kizárás</mat-checkbox>
+                  </td>
+                </ng-container>
               </tr>
             </ng-container>
           </tbody>
