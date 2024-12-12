@@ -61,39 +61,39 @@
             <button mat-button type="button">Események száma: {{events.length}}</button>
           </div>
         </div>
-      <table class="table table-striped table-bordered mt-3 table-responsive">
-        <thead>
-          <tr>
-            <th>
-              Esemény száma
-            </th>
-            <th>
-              Odds
-            </th>
-            <th>
-              Esemény nyertesség 
-            </th>
-          </tr>
-        </thead>
-        <tbody class="table-group-divider">
-          <ng-container formArrayName="events">
-            <tr *ngFor="let event of events.controls; let i=index" [formGroupName]="i">
-              <td class="align-middle">
-                {{i+1}}.
-              </td>
-              <td class="align-middle">
-                <mat-form-field class="w-100" appearance="outline">
-                  <mat-label>Odds</mat-label>
-                  <input matInput formControlName="odds" type="number">
-                </mat-form-field>
-              </td>
-              <td class="align-middle">
-                <mat-checkbox formControlName="won">Nyertes</mat-checkbox>
-              </td>
+        <table class="table table-striped table-bordered mt-3 table-responsive">
+          <thead>
+            <tr>
+              <th>
+                Esemény száma
+              </th>
+              <th>
+                Odds
+              </th>
+              <th>
+                Esemény nyertesség 
+              </th>
             </tr>
-          </ng-container>
-        </tbody>
-      </table>
+          </thead>
+          <tbody class="table-group-divider">
+            <ng-container formArrayName="events">
+              <tr *ngFor="let event of events.controls; let i=index" [formGroupName]="i">
+                <td class="align-middle">
+                  {{i+1}}.
+                </td>
+                <td class="align-middle">
+                  <mat-form-field class="w-100" appearance="outline">
+                    <mat-label>Odds</mat-label>
+                    <input matInput formControlName="odds" type="number">
+                  </mat-form-field>
+                </td>
+                <td class="align-middle">
+                  <mat-checkbox formControlName="won">Nyertes</mat-checkbox>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
       </form>
     </div>
     <div class="col-lg-3">

@@ -4,7 +4,6 @@ import {
   MatDialogTitle,
   MatDialogContent,
   MatDialogActions,
-  MatDialogClose,
 } from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 
@@ -16,8 +15,7 @@ import {MatButtonModule} from '@angular/material/button';
         MatButtonModule,
         MatDialogTitle,
         MatDialogContent,
-        MatDialogActions,
-        MatDialogClose,
+        MatDialogActions
     ],
     encapsulation: ViewEncapsulation.None
 })

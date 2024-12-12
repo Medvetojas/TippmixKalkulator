@@ -1,13 +1,12 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import  {MatButtonModule } from '@angular/material/button';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatInputModule } from '@angular/material/input';
+import {  MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
-import { InstructionsModalComponent } from '../instructions-modal/instructions-modal.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { HufCurrencyPipe } from "../pipes/huf-currency.pipe";
 
 @Component({
